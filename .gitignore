@@ -102,3 +102,24 @@ dist
 
 # TernJS port file
 .tern-port
+
+/coverage
+
+/log/*
+!/log/.keep
+*.log
+
+/*.sublime-*
+*.DS_Store
+._*
+/.idea
+/.vscode
+
+/node_modules
+/npm-debug.log
+
+/.cache-loader/
+
+.env
+.env.*local
+.gcp.json

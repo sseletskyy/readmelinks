@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "module": "ESNext",
+    "baseUrl": ".",
+    "paths": {
+      "*": ["src/*"]
+    },
+    "typeRoots": ["src"]
+  }
+}
