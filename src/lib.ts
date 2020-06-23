@@ -1,11 +1,11 @@
-const path = require("path");
-const fs = require("fs");
+const path = require('path');
+const fs = require('fs');
 
-const root = path.join(__dirname, "..");
-const srcRoot = path.join(root, "app");
-const readMePath = path.join(root, "README.md");
+const root = path.join(__dirname, '..');
+const srcRoot = path.join(root, 'app');
+const readMePath = path.join(root, 'README.md');
 
-const README_COMMENT_MARK = "readme-md-content-generator";
+const README_COMMENT_MARK = 'readme-md-content-generator';
 const README_COMMENT_MARK_BEGIN = `${README_COMMENT_MARK}-begin`;
 const README_COMMENT_MARK_END = `${README_COMMENT_MARK}-end`;
 
@@ -41,15 +41,15 @@ function getFiles(dir: string, files: string[] = []): string[] {
  * @returns {string} - updated file content
  */
 function replaceContent(fileContent: string, links: string[]): string | null {
-  const lines = fileContent.split("\n");
+  const lines = fileContent.split('\n');
   const beginLine = lines.findIndex((line) =>
-    line.includes(README_COMMENT_MARK_BEGIN)
+    line.includes(README_COMMENT_MARK_BEGIN),
   );
   if (beginLine < 0) {
     return null;
   }
   const endLine = lines.findIndex((line) =>
-    line.includes(README_COMMENT_MARK_END)
+    line.includes(README_COMMENT_MARK_END),
   );
   if (endLine < 0) {
     return null;
@@ -61,7 +61,7 @@ function replaceContent(fileContent: string, links: string[]): string | null {
     ...lines.slice(0, beginLine + 1),
     ...links,
     ...lines.slice(endLine),
-  ].join("\n");
+  ].join('\n');
 }
 
 /**
@@ -70,7 +70,7 @@ function replaceContent(fileContent: string, links: string[]): string | null {
  * @returns {string} - content of the file
  */
 function readRootReadme(readMePath: string): string {
-  return fs.readFileSync(readMePath, { encoding: "utf8", flag: "r" });
+  return fs.readFileSync(readMePath, { encoding: 'utf8', flag: 'r' });
 }
 
 /**
@@ -92,11 +92,11 @@ function writeRootReadme(readMePath: string, data: string): void {
 function generateLinks(
   root: string,
   srcRoot: string,
-  files: string[]
+  files: string[],
 ): string[] {
   return files.map((file) => {
-    const dirs: string[] = file.substring(srcRoot.length + 1).split("/");
-    const dir: string = dirs.slice(0, -1).join("/");
+    const dirs: string[] = file.substring(srcRoot.length + 1).split('/');
+    const dir: string = dirs.slice(0, -1).join('/');
     const url = file.substring(root.length + 1);
     return `[${dir}](${url})`;
   });
@@ -119,7 +119,7 @@ function applyFormat(links: string[], formatter: Formatter): string[] {
  */
 function updateRootReadme() {
   const files = getFiles(srcRoot);
-  console.log("found files\n", JSON.stringify(files, null, 2));
+  console.log('found files\n', JSON.stringify(files, null, 2));
 
   const formatter: Formatter = (x) => `* ${x}`;
   const links = generateLinks(root, srcRoot, files);

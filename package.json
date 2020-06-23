@@ -3,11 +3,15 @@
   "version": "0.0.1",
   "description": "Helper tool to find all nested README.md files, generate links to them and insert those links to the root README.md",
   "main": "src/index.ts",
+  "files": [
+    "/src"
+  ],
   "bin": {
-    "readme:links": "npx ts-node ./src/index.ts"
+    "readme:update": "npx ts-node ./src/index.ts"
   },
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "prettier": "npx prettier --check --write \"src/**/*.ts\""
   },
   "repository": {
     "type": "git",
@@ -29,6 +33,7 @@
     "@babel/core": "^7.10.3",
     "@babel/preset-env": "^7.10.3",
     "@babel/preset-typescript": "^7.10.1",
+    "@types/jest": "^26.0.0",
     "@types/node": "^14.0.13",
     "babel-jest": "^26.0.1",
     "husky": "^4.2.5",
@@ -40,7 +45,18 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "pretty-quick --staged"
+      "pre-commit": "prettier"
     }
+  },
+  "prettier": {
+    "printWidth": 80,
+    "parser": "babel",
+    "semi": true,
+    "tabWidth": 2,
+    "useTabs": false,
+    "singleQuote": true,
+    "trailingComma": "all",
+    "bracketSpacing": true,
+    "arrowParens": "always"
   }
 }

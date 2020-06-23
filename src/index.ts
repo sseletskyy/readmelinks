@@ -1,1 +1,1 @@
-require("./lib.ts").updateRootReadme();
+require('./lib.ts').updateRootReadme();
