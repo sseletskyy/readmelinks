@@ -118,6 +118,10 @@ function applyFormat(links: string[], formatter: Formatter): string[] {
  * main function which updates root README.md file
  */
 function updateRootReadme() {
+  console.log('Root\n', root);
+  console.log('srcRoot\n', srcRoot);
+  console.log('readMePath\n', readMePath);
+
   const files = getFiles(srcRoot);
   console.log('found files\n', JSON.stringify(files, null, 2));
 
@@ -128,6 +132,23 @@ function updateRootReadme() {
   const fileContent = readRootReadme(readMePath);
   const updatedFileContent = replaceContent(fileContent, formattedLinks);
   updatedFileContent && writeRootReadme(readMePath, updatedFileContent);
+}
+
+function readJson(filename: string) {
+  return JSON.parse(fs.readFileSync(filename, 'utf-8'));
+}
+
+function writeJson(filename: string, content: Record<string, string>) {
+  fs.writeFileSync(filename, JSON.stringify(content, null, 2) + '\n');
+}
+
+async function updateParentPackage(parentPackagePath: string) {
+  const pkg = await readJson(parentPackagePath);
+  pkg.scripts = {
+    ...(pkg.scripts || {}),
+    'readme:links': 'readmelinks',
+  };
+  await writeJson(parentPackagePath, pkg);
 }
 
 module.exports = {

@@ -1,11 +1,18 @@
 {
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
+    "target": "es5",
     "module": "ESNext",
+    "outDir": ".",
+    "declaration": true,
+    "strict": true,
     "baseUrl": ".",
     "paths": {
-      "*": ["src/*"]
+      "*": ["src/*", "bin/*"]
     },
-    "typeRoots": ["src"]
-  }
+    "typeRoots": ["src"],
+    "types": ["node"]
+  },
+  "include": ["src", "bin"],
+  "exclude": ["node_modules", "**/*.spec.ts"]
 }

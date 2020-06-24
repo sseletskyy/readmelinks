@@ -4,14 +4,16 @@
   "description": "Helper tool to find all nested README.md files, generate links to them and insert those links to the root README.md",
   "main": "src/index.ts",
   "files": [
-    "/src"
+    "/src/*.js",
+    "/bin/*.js"
   ],
   "bin": {
-    "readme:update": "npx ts-node ./src/index.ts"
+    "readmeupdate": "npx ts-node ./src/index.ts"
   },
   "scripts": {
     "test": "jest",
-    "prettier": "npx prettier --check --write \"src/**/*.ts\""
+    "prettier": "npx prettier --check --write \"src/**/*.ts\"",
+    "build" : "tsc"
   },
   "repository": {
     "type": "git",
