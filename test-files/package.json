@@ -1,0 +1,8 @@
+{
+  "name": "test-package",
+  "readmelinks": {
+    "srcRoot": "src/js",
+    "commentMark": "generator",
+    "regexp": "*.md"
+  }
+}

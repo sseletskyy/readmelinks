@@ -1,11 +1,12 @@
 declare const path: any;
 declare const fs: any;
-declare const root: any;
-declare const srcRoot: any;
-declare const readMePath: any;
-declare const README_COMMENT_MARK = "readme-md-content-generator";
-declare const README_COMMENT_MARK_BEGIN: string;
-declare const README_COMMENT_MARK_END: string;
+interface Config {
+  root: string;
+  srcRoot: string;
+  readMePath: string;
+  commentMark: string;
+}
+declare const defaultConfig: Partial<Config>;
 /**
  * Searches recursively for all README.md files
  * returns an array of absolute paths of found files
@@ -22,7 +23,11 @@ declare function getFiles(dir: string, files?: string[]): string[];
  * @param {string[]} links - array of prepared links to found nested README.md files
  * @returns {string} - updated file content
  */
-declare function replaceContent(fileContent: string, links: string[]): string | null;
+declare function replaceContent(
+  commentMark: string,
+  fileContent: string,
+  links: string[],
+): string | null;
 /**
  * Utility method to read the content of the file
  * @param {string} readMePath string
@@ -42,7 +47,11 @@ declare function writeRootReadme(readMePath: string, data: string): void;
  * @param {string[]} files - list of absolute paths
  * @returns {string[]} links - list of links in the format '[title](relative url)'
  */
-declare function generateLinks(root: string, srcRoot: string, files: string[]): string[];
+declare function generateLinks(
+  root: string,
+  srcRoot: string,
+  files: string[],
+): string[];
 declare type Formatter = (x: string) => string;
 /**
  * Applies a decorator function to every link
@@ -54,7 +63,10 @@ declare function applyFormat(links: string[], formatter: Formatter): string[];
 /**
  * main function which updates root README.md file
  */
-declare function updateRootReadme(): void;
+declare function updateRootReadme(config: Config): void;
 declare function readJson(filename: string): any;
-declare function writeJson(filename: string, content: Record<string, string>): void;
+declare function writeJson(
+  filename: string,
+  content: Record<string, string>,
+): void;
 declare function updateParentPackage(parentPackagePath: string): Promise<void>;

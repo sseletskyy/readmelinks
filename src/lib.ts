@@ -1,13 +1,16 @@
 const path = require('path');
 const fs = require('fs');
 
-const root = path.join(__dirname, '..');
-const srcRoot = path.join(root, 'app');
-const readMePath = path.join(root, 'README.md');
+interface Config {
+  root: string;
+  srcRoot: string;
+  readMePath: string;
+  commentMark: string;
+}
 
-const README_COMMENT_MARK = 'readme-md-content-generator';
-const README_COMMENT_MARK_BEGIN = `${README_COMMENT_MARK}-begin`;
-const README_COMMENT_MARK_END = `${README_COMMENT_MARK}-end`;
+const defaultConfig: Partial<Config> = {
+  // commentMark: 'readme-md-content-generator',
+};
 
 /**
  * Searches recursively for all README.md files
@@ -24,7 +27,7 @@ function getFiles(dir: string, files: string[] = []): string[] {
     if (fs.statSync(fullName).isDirectory()) {
       getFiles(fullName, files);
     } else {
-      if (/README\.md/.test(name)) {
+      if (/\w+\.md$/.test(name)) {
         files.push(fullName);
       }
     }
@@ -40,19 +43,34 @@ function getFiles(dir: string, files: string[] = []): string[] {
  * @param {string[]} links - array of prepared links to found nested README.md files
  * @returns {string} - updated file content
  */
-function replaceContent(fileContent: string, links: string[]): string | null {
+function replaceContent(
+  commentMark: string,
+  fileContent: string,
+  links: string[],
+): string | null {
   const lines = fileContent.split('\n');
-  const beginLine = lines.findIndex((line) =>
+  const README_COMMENT_MARK_BEGIN = `${commentMark}-begin`;
+  const README_COMMENT_MARK_END = `${commentMark}-end`;
+
+  // console.log('lines\n', lines);
+  let beginLine = lines.findIndex((line) =>
     line.includes(README_COMMENT_MARK_BEGIN),
   );
-  if (beginLine < 0) {
-    return null;
-  }
-  const endLine = lines.findIndex((line) =>
+  let endLine = lines.findIndex((line) =>
     line.includes(README_COMMENT_MARK_END),
   );
-  if (endLine < 0) {
-    return null;
+  if (beginLine < 0 && endLine < 0) {
+    lines.push(`<!-- ${README_COMMENT_MARK_BEGIN} -->`);
+    lines.push(`<!-- ${README_COMMENT_MARK_END} -->`);
+    beginLine = lines.length - 2;
+    endLine = beginLine + 1;
+  } else if (beginLine < 0 && endLine >= 0) {
+    beginLine = endLine;
+    lines.splice(beginLine, 0, `<!-- ${README_COMMENT_MARK_BEGIN} -->`);
+    endLine++;
+  } else if (endLine < 0 && beginLine >= 0) {
+    endLine = beginLine + 1;
+    lines.splice(endLine, 0, `<!-- ${README_COMMENT_MARK_END} -->`);
   }
   if (endLine < beginLine) {
     return null;
@@ -117,21 +135,33 @@ function applyFormat(links: string[], formatter: Formatter): string[] {
 /**
  * main function which updates root README.md file
  */
-function updateRootReadme() {
-  console.log('Root\n', root);
-  console.log('srcRoot\n', srcRoot);
-  console.log('readMePath\n', readMePath);
+function updateRootReadme(config: Config) {
+  ['root', 'srcRoot', 'readMePath', 'commentMark'].forEach((key) => {
+    if (key !== undefined && !config[key as keyof Config]) {
+      throw new Error(`In package.json readmelinks.${key} is missing`);
+    }
+  });
 
-  const files = getFiles(srcRoot);
+  console.log('Root\n', config.root);
+  config.srcRoot = path.join(config.root, config.srcRoot);
+  console.log('srcRoot\n', config.srcRoot);
+  console.log('readMePath\n', config.readMePath);
+  console.log('commentMark\n', config.commentMark);
+
+  const files = getFiles(config.srcRoot);
   console.log('found files\n', JSON.stringify(files, null, 2));
 
   const formatter: Formatter = (x) => `* ${x}`;
-  const links = generateLinks(root, srcRoot, files);
+  const links = generateLinks(config.root, config.srcRoot, files);
   const formattedLinks = applyFormat(links, formatter);
 
-  const fileContent = readRootReadme(readMePath);
-  const updatedFileContent = replaceContent(fileContent, formattedLinks);
-  updatedFileContent && writeRootReadme(readMePath, updatedFileContent);
+  const fileContent = readRootReadme(config.readMePath);
+  const updatedFileContent = replaceContent(
+    config.commentMark,
+    fileContent,
+    formattedLinks,
+  );
+  updatedFileContent && writeRootReadme(config.readMePath, updatedFileContent);
 }
 
 function readJson(filename: string) {
@@ -156,4 +186,8 @@ module.exports = {
   generateLinks,
   replaceContent,
   updateRootReadme,
+  readJson,
+  getFiles,
+  readRootReadme,
+  writeRootReadme,
 };

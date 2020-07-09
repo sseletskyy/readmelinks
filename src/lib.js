@@ -55,12 +55,9 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
 };
 var path = require('path');
 var fs = require('fs');
-var root = path.join(__dirname, '..');
-var srcRoot = path.join(root, 'app');
-var readMePath = path.join(root, 'README.md');
-var README_COMMENT_MARK = 'readme-md-content-generator';
-var README_COMMENT_MARK_BEGIN = README_COMMENT_MARK + "-begin";
-var README_COMMENT_MARK_END = README_COMMENT_MARK + "-end";
+var defaultConfig = {
+// commentMark: 'readme-md-content-generator',
+};
 /**
  * Searches recursively for all README.md files
  * returns an array of absolute paths of found files
@@ -78,7 +75,7 @@ function getFiles(dir, files) {
             getFiles(fullName, files);
         }
         else {
-            if (/README\.md/.test(name_1)) {
+            if (/\w+\.md$/.test(name_1)) {
                 files.push(fullName);
             }
         }
@@ -93,19 +90,31 @@ function getFiles(dir, files) {
  * @param {string[]} links - array of prepared links to found nested README.md files
  * @returns {string} - updated file content
  */
-function replaceContent(fileContent, links) {
+function replaceContent(commentMark, fileContent, links) {
     var lines = fileContent.split('\n');
+    var README_COMMENT_MARK_BEGIN = commentMark + "-begin";
+    var README_COMMENT_MARK_END = commentMark + "-end";
+    // console.log('lines\n', lines);
     var beginLine = lines.findIndex(function (line) {
         return line.includes(README_COMMENT_MARK_BEGIN);
     });
-    if (beginLine < 0) {
-        return null;
-    }
     var endLine = lines.findIndex(function (line) {
         return line.includes(README_COMMENT_MARK_END);
     });
-    if (endLine < 0) {
-        return null;
+    if (beginLine < 0 && endLine < 0) {
+        lines.push("<!-- " + README_COMMENT_MARK_BEGIN + " -->");
+        lines.push("<!-- " + README_COMMENT_MARK_END + " -->");
+        beginLine = lines.length - 2;
+        endLine = beginLine + 1;
+    }
+    else if (beginLine < 0 && endLine >= 0) {
+        beginLine = endLine;
+        lines.splice(beginLine, 0, "<!-- " + README_COMMENT_MARK_BEGIN + " -->");
+        endLine++;
+    }
+    else if (endLine < 0 && beginLine >= 0) {
+        endLine = beginLine + 1;
+        lines.splice(endLine, 0, "<!-- " + README_COMMENT_MARK_END + " -->");
     }
     if (endLine < beginLine) {
         return null;
@@ -155,18 +164,25 @@ function applyFormat(links, formatter) {
 /**
  * main function which updates root README.md file
  */
-function updateRootReadme() {
-    console.log('Root\n', root);
-    console.log('srcRoot\n', srcRoot);
-    console.log('readMePath\n', readMePath);
-    var files = getFiles(srcRoot);
+function updateRootReadme(config) {
+    ['root', 'srcRoot', 'readMePath', 'commentMark'].forEach(function (key) {
+        if (key !== undefined && !config[key]) {
+            throw new Error("In package.json readmelinks." + key + " is missing");
+        }
+    });
+    console.log('Root\n', config.root);
+    config.srcRoot = path.join(config.root, config.srcRoot);
+    console.log('srcRoot\n', config.srcRoot);
+    console.log('readMePath\n', config.readMePath);
+    console.log('commentMark\n', config.commentMark);
+    var files = getFiles(config.srcRoot);
     console.log('found files\n', JSON.stringify(files, null, 2));
     var formatter = function (x) { return "* " + x; };
-    var links = generateLinks(root, srcRoot, files);
+    var links = generateLinks(config.root, config.srcRoot, files);
     var formattedLinks = applyFormat(links, formatter);
-    var fileContent = readRootReadme(readMePath);
-    var updatedFileContent = replaceContent(fileContent, formattedLinks);
-    updatedFileContent && writeRootReadme(readMePath, updatedFileContent);
+    var fileContent = readRootReadme(config.readMePath);
+    var updatedFileContent = replaceContent(config.commentMark, fileContent, formattedLinks);
+    updatedFileContent && writeRootReadme(config.readMePath, updatedFileContent);
 }
 function readJson(filename) {
     return JSON.parse(fs.readFileSync(filename, 'utf-8'));
@@ -196,4 +212,7 @@ module.exports = {
     generateLinks: generateLinks,
     replaceContent: replaceContent,
     updateRootReadme: updateRootReadme,
+    readJson: readJson,
+    getFiles: getFiles,
+    readRootReadme: readRootReadme,
 };

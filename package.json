@@ -12,7 +12,7 @@
   },
   "scripts": {
     "test": "jest",
-    "prettier": "npx prettier --check --write \"src/**/*.ts\"",
+    "prettier": "npx prettier --check --write \"src/**/*.ts\" --parser typescript",
     "build" : "tsc"
   },
   "repository": {
