@@ -14,7 +14,7 @@
   "scripts": {
     "test": "jest",
     "prettier": "npx prettier --check --write \"src/**/*.ts\" --parser typescript",
-    "build" : "tsc"
+    "build": "tsc"
   },
   "repository": {
     "type": "git",
@@ -33,18 +33,18 @@
   },
   "homepage": "https://github.com/sseletskyy/readme-links#readme",
   "devDependencies": {
-    "@babel/core": "^7.10.3",
-    "@babel/preset-env": "^7.10.3",
-    "@babel/preset-typescript": "^7.10.1",
-    "@types/jest": "^26.0.0",
-    "@types/node": "^14.0.13",
-    "babel-jest": "^26.0.1",
+    "@babel/core": "^7.10.5",
+    "@babel/preset-env": "^7.10.4",
+    "@babel/preset-typescript": "^7.10.4",
+    "@types/jest": "^26.0.7",
+    "@types/node": "^14.0.27",
+    "babel-jest": "^26.1.0",
     "husky": "^4.2.5",
-    "jest": "^26.0.1",
+    "jest": "^26.1.0",
     "prettier": "^2.0.5",
     "pretty-quick": "^2.0.1",
-    "ts-jest": "^26.1.1",
-    "typescript": "^3.9.5"
+    "ts-jest": "^26.1.4",
+    "typescript": "^3.9.7"
   },
   "husky": {
     "hooks": {
