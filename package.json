@@ -1,14 +1,15 @@
 {
-  "name": "readme-links",
+  "name": "readmelinks",
   "version": "0.0.1",
   "description": "Helper tool to find all nested README.md files, generate links to them and insert those links to the root README.md",
-  "main": "src/index.ts",
+  "main": "src/index.js",
   "files": [
     "/src/*.js",
     "/bin/*.js"
   ],
   "bin": {
-    "readmeupdate": "npx ts-node ./src/index.ts"
+    "readmeupdate": "npx ts-node ./src/index.ts",
+    "readmelinks": "./bin/readmelinks.js"
   },
   "scripts": {
     "test": "jest",
