@@ -164,21 +164,37 @@ function updateRootReadme(config: Config) {
   updatedFileContent && writeRootReadme(config.readMePath, updatedFileContent);
 }
 
-function readJson(filename: string) {
+function readJson(filename: string): Record<string, any> {
   return JSON.parse(fs.readFileSync(filename, 'utf-8'));
 }
 
-function writeJson(filename: string, content: Record<string, string>) {
+function writeJson(filename: string, content: Record<string, any>) {
   fs.writeFileSync(filename, JSON.stringify(content, null, 2) + '\n');
 }
 
-async function updateParentPackage(parentPackagePath: string) {
+async function addScriptToParentPackage(parentPackagePath: string) {
   const pkg = await readJson(parentPackagePath);
   pkg.scripts = {
     ...(pkg.scripts || {}),
-    'readme:links': 'readmelinks',
+    readmelinks: 'readmelinks',
   };
   await writeJson(parentPackagePath, pkg);
+}
+
+const DEFAULT_SETTINGS: Record<string, string> = {
+  srcRoot: 'src',
+  commentMark: 'generator',
+  regexp: '*.md',
+};
+function generateDefaultConfigInPackageJson(
+  parentPackageJson: Record<string, any>,
+): Record<string, any> | null {
+  if (!parentPackageJson.readmelinks) {
+    parentPackageJson.readmelinks = DEFAULT_SETTINGS;
+    return parentPackageJson;
+  } else {
+    return null;
+  }
 }
 
 module.exports = {
@@ -187,7 +203,10 @@ module.exports = {
   replaceContent,
   updateRootReadme,
   readJson,
+  writeJson,
   getFiles,
   readRootReadme,
   writeRootReadme,
+  generateDefaultConfigInPackageJson,
+  DEFAULT_SETTINGS,
 };

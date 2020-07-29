@@ -64,9 +64,15 @@ declare function applyFormat(links: string[], formatter: Formatter): string[];
  * main function which updates root README.md file
  */
 declare function updateRootReadme(config: Config): void;
-declare function readJson(filename: string): any;
+declare function readJson(filename: string): Record<string, any>;
 declare function writeJson(
   filename: string,
-  content: Record<string, string>,
+  content: Record<string, any>,
 ): void;
-declare function updateParentPackage(parentPackagePath: string): Promise<void>;
+declare function addScriptToParentPackage(
+  parentPackagePath: string,
+): Promise<void>;
+declare const DEFAULT_SETTINGS: Record<string, string>;
+declare function generateDefaultConfigInPackageJson(
+  parentPackageJson: Record<string, any>,
+): Record<string, any> | null;

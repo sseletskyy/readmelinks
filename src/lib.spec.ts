@@ -7,6 +7,9 @@ const {
   getFiles,
   readRootReadme,
   writeRootReadme,
+  readJson,
+  generateDefaultConfigInPackageJson,
+  DEFAULT_SETTINGS,
 } = require('./lib.ts');
 const commentMark = 'readme-md-content-generator';
 
@@ -185,6 +188,28 @@ some other content`;
       // restore content
       writeRootReadme(readmeFilePath, original);
       expect(readRootReadme(readmeFilePath)).toEqual(original);
+    });
+  });
+
+  describe('generateDefaultConfigInPackageJson', () => {
+    it('should generate default params and return new json if the key "readmelinks" is not present in package.json', () => {
+      const root = path.join(__dirname, '..');
+      const testPackageJsonPath = path.join(
+        root,
+        'test-files',
+        'package_without_key.json',
+      );
+      const testPackageJson = readJson(testPackageJsonPath);
+      const actual = generateDefaultConfigInPackageJson(testPackageJson);
+      const expected = DEFAULT_SETTINGS;
+      expect(actual && actual.readmelinks).toEqual(expected);
+    });
+    it('should return null if the key "readmelinks" is already present in package.json', () => {
+      const root = path.join(__dirname, '..');
+      const testPackageJsonPath = path.join(root, 'test-files', 'package.json');
+      const testPackageJson = readJson(testPackageJsonPath);
+      const actual = generateDefaultConfigInPackageJson(testPackageJson);
+      expect(actual).toEqual(null);
     });
   });
 });

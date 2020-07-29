@@ -190,7 +190,7 @@ function readJson(filename) {
 function writeJson(filename, content) {
     fs.writeFileSync(filename, JSON.stringify(content, null, 2) + '\n');
 }
-function updateParentPackage(parentPackagePath) {
+function addScriptToParentPackage(parentPackagePath) {
     return __awaiter(this, void 0, void 0, function () {
         var pkg;
         return __generator(this, function (_a) {
@@ -198,7 +198,7 @@ function updateParentPackage(parentPackagePath) {
                 case 0: return [4 /*yield*/, readJson(parentPackagePath)];
                 case 1:
                     pkg = _a.sent();
-                    pkg.scripts = __assign(__assign({}, (pkg.scripts || {})), { 'readme:links': 'readmelinks' });
+                    pkg.scripts = __assign(__assign({}, (pkg.scripts || {})), { readmelinks: 'readmelinks' });
                     return [4 /*yield*/, writeJson(parentPackagePath, pkg)];
                 case 2:
                     _a.sent();
@@ -207,12 +207,30 @@ function updateParentPackage(parentPackagePath) {
         });
     });
 }
+var DEFAULT_SETTINGS = {
+    srcRoot: 'src',
+    commentMark: 'generator',
+    regexp: '*.md',
+};
+function generateDefaultConfigInPackageJson(parentPackageJson) {
+    if (!parentPackageJson.readmelinks) {
+        parentPackageJson.readmelinks = DEFAULT_SETTINGS;
+        return parentPackageJson;
+    }
+    else {
+        return null;
+    }
+}
 module.exports = {
     applyFormat: applyFormat,
     generateLinks: generateLinks,
     replaceContent: replaceContent,
     updateRootReadme: updateRootReadme,
     readJson: readJson,
+    writeJson: writeJson,
     getFiles: getFiles,
     readRootReadme: readRootReadme,
+    writeRootReadme: writeRootReadme,
+    generateDefaultConfigInPackageJson: generateDefaultConfigInPackageJson,
+    DEFAULT_SETTINGS: DEFAULT_SETTINGS,
 };
