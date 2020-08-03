@@ -48,7 +48,8 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "prettier"
+      "pre-commit": "prettier",
+      "pre-push": "npm test"
     }
   },
   "prettier": {
