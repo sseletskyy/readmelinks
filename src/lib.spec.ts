@@ -161,6 +161,7 @@ some other content`;
       const actual = getFiles(dir);
       const expected = [
         path.join(dir, 'README.md'),
+        path.join(dir, 'dev.md'),
         path.join(dir, 'src', 'js', 'components', 'README.md'),
         path.join(dir, 'src', 'js', 'tests', 'Tests.md'),
       ];
