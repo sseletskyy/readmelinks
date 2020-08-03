@@ -142,14 +142,10 @@ function updateRootReadme(config: Config) {
     }
   });
 
-  // console.log('Root\n', config.root);
   config.srcRoot = path.join(config.root, config.srcRoot);
-  // console.log('srcRoot\n', config.srcRoot);
-  // console.log('readMePath\n', config.readMePath);
-  // console.log('commentMark\n', config.commentMark);
 
-  console.log('Config in package.json:');
-  console.log(JSON.stringify(config, null, 2));
+  // console.log('Config in package.json:');
+  // console.log(JSON.stringify(config, null, 2));
 
   const files = getFiles(config.srcRoot);
   console.log('Found files');
