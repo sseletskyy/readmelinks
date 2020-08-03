@@ -2,10 +2,10 @@
 var aPath = require('path');
 var main = require('./lib');
 var parentRoot = aPath.join(__dirname, '..', '..', '..');
-console.log("parent root folder = " + parentRoot);
 var parentPackageJsonPath = aPath.join(parentRoot, 'package.json');
 var parentPackageJson = main.readJson(parentPackageJsonPath);
-console.log('PACKAGE.JSON\n', parentPackageJson['readmelinks']);
+console.log('Config in package.json:');
+console.log(parentPackageJson['readmelinks']);
 var jsonWithDefaultConfigOrNothing = main.generateDefaultConfigInPackageJson(parentPackageJson);
 var configFromJson;
 if (!!jsonWithDefaultConfigOrNothing) {

@@ -142,14 +142,18 @@ function updateRootReadme(config: Config) {
     }
   });
 
-  console.log('Root\n', config.root);
+  // console.log('Root\n', config.root);
   config.srcRoot = path.join(config.root, config.srcRoot);
-  console.log('srcRoot\n', config.srcRoot);
-  console.log('readMePath\n', config.readMePath);
-  console.log('commentMark\n', config.commentMark);
+  // console.log('srcRoot\n', config.srcRoot);
+  // console.log('readMePath\n', config.readMePath);
+  // console.log('commentMark\n', config.commentMark);
+
+  console.log('Config in package.json:');
+  console.log(JSON.stringify(config, null, 2));
 
   const files = getFiles(config.srcRoot);
-  console.log('found files\n', JSON.stringify(files, null, 2));
+  console.log('Found files');
+  console.log(JSON.stringify(files, null, 2));
 
   const formatter: Formatter = (x) => `* ${x}`;
   const links = generateLinks(config.root, config.srcRoot, files);
@@ -183,7 +187,7 @@ async function addScriptToParentPackage(parentPackagePath: string) {
 
 const DEFAULT_SETTINGS: Record<string, string> = {
   srcRoot: 'src',
-  commentMark: 'generator',
+  commentMark: 'readmelinks-generator',
   regexp: '*.md',
 };
 function generateDefaultConfigInPackageJson(

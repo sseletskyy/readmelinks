@@ -1,11 +1,11 @@
 const aPath = require('path');
 const main = require('./lib');
 const parentRoot = aPath.join(__dirname, '..', '..', '..');
-console.log(`parent root folder = ${parentRoot}`);
 
 const parentPackageJsonPath = aPath.join(parentRoot, 'package.json');
 const parentPackageJson = main.readJson(parentPackageJsonPath);
-console.log('PACKAGE.JSON\n', parentPackageJson['readmelinks']);
+console.log('Config in package.json:');
+console.log(parentPackageJson['readmelinks']);
 
 const jsonWithDefaultConfigOrNothing = main.generateDefaultConfigInPackageJson(
   parentPackageJson,

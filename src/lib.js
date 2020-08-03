@@ -170,13 +170,16 @@ function updateRootReadme(config) {
             throw new Error("In package.json readmelinks." + key + " is missing");
         }
     });
-    console.log('Root\n', config.root);
+    // console.log('Root\n', config.root);
     config.srcRoot = path.join(config.root, config.srcRoot);
-    console.log('srcRoot\n', config.srcRoot);
-    console.log('readMePath\n', config.readMePath);
-    console.log('commentMark\n', config.commentMark);
+    // console.log('srcRoot\n', config.srcRoot);
+    // console.log('readMePath\n', config.readMePath);
+    // console.log('commentMark\n', config.commentMark);
+    console.log('Config in package.json:');
+    console.log(JSON.stringify(config, null, 2));
     var files = getFiles(config.srcRoot);
-    console.log('found files\n', JSON.stringify(files, null, 2));
+    console.log('Found files');
+    console.log(JSON.stringify(files, null, 2));
     var formatter = function (x) { return "* " + x; };
     var links = generateLinks(config.root, config.srcRoot, files);
     var formattedLinks = applyFormat(links, formatter);
@@ -209,7 +212,7 @@ function addScriptToParentPackage(parentPackagePath) {
 }
 var DEFAULT_SETTINGS = {
     srcRoot: 'src',
-    commentMark: 'generator',
+    commentMark: 'readmelinks-generator',
     regexp: '*.md',
 };
 function generateDefaultConfigInPackageJson(parentPackageJson) {
