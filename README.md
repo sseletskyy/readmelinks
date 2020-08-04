@@ -21,6 +21,11 @@ A simple tool which does two things
 * finds all `*.md` files across the project (`<root>/src` is default folder for search)
 * inserts links of found files into the `README.md` in the root of the project
 
+## No extra dependencies
+`readmelinks` uses only `Nodejs` API.
+
+Although it is written in `typescript` and tested with Jest, in the end you are using a pure `Javascript` tool without any 3-rd party dependencies and thus unexpected surprises.
+
 ## Configuration
 First run of `npx readmelinks` inserts default configuration into `package.json`.
 
