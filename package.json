@@ -3,6 +3,10 @@
   "version": "0.0.1",
   "description": "Helper tool to find all nested README.md files, generate links to them and insert those links to the root README.md",
   "main": "src/index.js",
+  "engines": {
+    "node": ">=12.0.0",
+    "npm": ">=6.0.0"
+  },
   "files": [
     "/src/*.js",
     "/bin/*.js"

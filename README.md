@@ -1,6 +1,26 @@
 
 # readmelinks
 
+<p>
+  <a href='https://app.codeship.com/projects/404985'><img src='https://app.codeship.com/projects/adcb5e50-b9f4-0138-49d4-468ae6770853/status?branch=master' alt='Codeship Status for sseletskyy/readmelinks' /></a>
+  <a href="https://www.npmjs.com/package/readmelinks">
+    <img src="https://img.shields.io/npm/v/readmelinks.svg"
+         alt="npm version">
+  </a>
+  <a href="https://packagephobia.now.sh/result?p=readmelinks">
+    <img src="https://packagephobia.now.sh/badge?p=readmelinks"
+         alt="install size">
+  </a>
+  <a href="https://github.com/sseletskyy/readmelinks/blob/master/LICENSE">
+    <img src="https://img.shields.io/npm/l/readmelinks.svg"
+         alt="license">
+  </a>
+  <a href="https://david-dm.org/sseletskyy/readmelinks">
+    <img src="https://david-dm.org/sseletskyy/readmelinks/status.svg"
+         alt="dependency status">
+  </a>
+</p>
+
 ## TL;DR
 
 #### Install
