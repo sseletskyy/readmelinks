@@ -3,9 +3,7 @@
 
 <p>
   <a href='https://app.codeship.com/projects/404985'><img src='https://app.codeship.com/projects/adcb5e50-b9f4-0138-49d4-468ae6770853/status?branch=master' alt='Codeship Status for sseletskyy/readmelinks' /></a>
-  
-  <a href='https://coveralls.io/github/sseletskyy/readmelinks?branch=master'><img src='https://coveralls.io/repos/github/sseletskyy/readmelinks/badge.svg?branch=master' alt='Coverage Status' /></a>
-  
+  <a href='https://coveralls.io/github/sseletskyy/readmelinks?branch=master'><img src='https://coveralls.io/repos/github/sseletskyy/readmelinks/badge.svg?branch=master' alt='Coverage Status' /></a>  
   <a href="https://www.npmjs.com/package/readmelinks">
     <img src="https://img.shields.io/npm/v/readmelinks.svg"
          alt="npm version">
@@ -36,8 +34,20 @@ yarn add readmelinks -D
 ```
 #### Run
 ```
-npx readmelinks
+yarn readmelinks
 ```
+
+or add a line in scripts in `package.json`
+```
+"scripts": {
+  ...
+  "readmelinks": "readmelinks"
+}
+```
+and run
+```
+npm run readmelinks
+```     
 
 ## Overview
 A simple tool which does two things
