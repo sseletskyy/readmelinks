@@ -1,5 +1,8 @@
+import 'jest';
 import * as path from 'path';
+import { Config } from './lib';
 
+const fs = require('fs');
 const {
   applyFormat,
   generateLinks,
@@ -9,6 +12,8 @@ const {
   writeRootReadme,
   readJson,
   generateDefaultConfigInPackageJson,
+  updateRootReadme,
+  writeJson,
   DEFAULT_SETTINGS,
 } = require('./lib.ts');
 const commentMark = 'readme-md-content-generator';
@@ -211,6 +216,82 @@ some other content`;
       const testPackageJson = readJson(testPackageJsonPath);
       const actual = generateDefaultConfigInPackageJson(testPackageJson);
       expect(actual).toEqual(null);
+    });
+  });
+  describe('updateRootReadme', () => {
+    const root = path.join(__dirname, '..', 'test-files');
+    const srcRoot = 'src';
+    const readMePath = path.join(root, 'test-readme.md');
+    const commentMark = 'test-mark';
+    beforeAll(() => {
+      // create file
+      fs.writeFileSync(readMePath, '');
+    });
+    afterAll(() => {
+      fs.unlinkSync(readMePath);
+    });
+    it('should update readme file', () => {
+      const config: Config = {
+        root,
+        srcRoot,
+        readMePath,
+        commentMark,
+      };
+      updateRootReadme(config);
+      const actual = fs.readFileSync(readMePath, 'utf-8');
+      const expected = `
+<!-- test-mark-begin -->
+* [js/components](src/js/components/README.md)
+* [js/tests](src/js/tests/Tests.md)
+<!-- test-mark-end -->`;
+      expect(actual).toEqual(expected);
+    });
+    it('should throw error if config.root is not defined', () => {
+      const subject = () => {
+        updateRootReadme({});
+      };
+      expect(subject).toThrow('In package.json readmelinks.root is missing');
+    });
+    it('should throw error if config.srcRoot is not defined', () => {
+      const subject = () => {
+        updateRootReadme({ root });
+      };
+      expect(subject).toThrow('In package.json readmelinks.srcRoot is missing');
+    });
+    it('should throw error if config.srcRoot is not defined', () => {
+      const subject = () => {
+        updateRootReadme({ root, srcRoot });
+      };
+      expect(subject).toThrow(
+        'In package.json readmelinks.readMePath is missing',
+      );
+    });
+    it('should throw error if config.srcRoot is not defined', () => {
+      const subject = () => {
+        updateRootReadme({ root, srcRoot, readMePath });
+      };
+      expect(subject).toThrow(
+        'In package.json readmelinks.commentMark is missing',
+      );
+    });
+  });
+  describe('writeJson', () => {
+    const root = path.join(__dirname, '..', 'test-files');
+    const testJsonFile = path.join(root, 'test.json');
+    beforeAll(() => {
+      // create file
+      fs.writeFileSync(testJsonFile, '{}');
+    });
+    afterAll(() => {
+      fs.unlinkSync(testJsonFile);
+    });
+    it('should write valid json content to the file', () => {
+      const content = {
+        foo: 'bar',
+      };
+      writeJson(testJsonFile, content);
+      const actual = readJson(testJsonFile);
+      expect(actual).toEqual(content);
     });
   });
 });

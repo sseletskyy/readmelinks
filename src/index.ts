@@ -1,3 +1,5 @@
+import { Config } from 'lib';
+
 const aPath = require('path');
 const main = require('./lib');
 const parentRoot = aPath.join(__dirname, '..', '..', '..');

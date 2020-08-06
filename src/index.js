@@ -1,4 +1,3 @@
-"use strict";
 var aPath = require('path');
 var main = require('./lib');
 var parentRoot = aPath.join(__dirname, '..', '..', '..');

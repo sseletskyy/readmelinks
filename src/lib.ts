@@ -1,7 +1,7 @@
 const path = require('path');
 const fs = require('fs');
 
-interface Config {
+export interface Config {
   root: string;
   srcRoot: string;
   readMePath: string;
@@ -135,7 +135,7 @@ function applyFormat(links: string[], formatter: Formatter): string[] {
 /**
  * main function which updates root README.md file
  */
-function updateRootReadme(config: Config) {
+function updateRootReadme(config: Config): void {
   ['root', 'srcRoot', 'readMePath', 'commentMark'].forEach((key) => {
     if (key !== undefined && !config[key as keyof Config]) {
       throw new Error(`In package.json readmelinks.${key} is missing`);
@@ -172,14 +172,14 @@ function writeJson(filename: string, content: Record<string, any>) {
   fs.writeFileSync(filename, JSON.stringify(content, null, 2) + '\n');
 }
 
-async function addScriptToParentPackage(parentPackagePath: string) {
-  const pkg = await readJson(parentPackagePath);
-  pkg.scripts = {
-    ...(pkg.scripts || {}),
-    readmelinks: 'readmelinks',
-  };
-  await writeJson(parentPackagePath, pkg);
-}
+// async function addScriptToParentPackage(parentPackagePath: string) {
+//   const pkg = await readJson(parentPackagePath);
+//   pkg.scripts = {
+//     ...(pkg.scripts || {}),
+//     readmelinks: 'readmelinks',
+//   };
+//   await writeJson(parentPackagePath, pkg);
+// }
 
 const DEFAULT_SETTINGS: Record<string, string> = {
   srcRoot: 'src',
