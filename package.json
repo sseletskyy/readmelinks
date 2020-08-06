@@ -1,6 +1,6 @@
 {
   "name": "readmelinks",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Helper tool to find all nested README.md files, generate links to them and insert those links to the root README.md",
   "main": "src/index.js",
   "engines": {
