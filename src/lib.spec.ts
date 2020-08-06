@@ -207,8 +207,12 @@ some other content`;
       );
       const testPackageJson = readJson(testPackageJsonPath);
       const actual = generateDefaultConfigInPackageJson(testPackageJson);
-      const expected = DEFAULT_SETTINGS;
-      expect(actual && actual.readmelinks).toEqual(expected);
+      const expectedConfig = DEFAULT_SETTINGS;
+      const expectedScripts = {
+        readmelinks: 'readmelinks',
+      };
+      expect(actual && actual.readmelinks).toEqual(expectedConfig);
+      expect(actual.scripts).toEqual(expectedScripts);
     });
     it('should return null if the key "readmelinks" is already present in package.json', () => {
       const root = path.join(__dirname, '..');

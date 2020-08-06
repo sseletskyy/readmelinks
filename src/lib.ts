@@ -172,14 +172,14 @@ function writeJson(filename: string, content: Record<string, any>) {
   fs.writeFileSync(filename, JSON.stringify(content, null, 2) + '\n');
 }
 
-// async function addScriptToParentPackage(parentPackagePath: string) {
-//   const pkg = await readJson(parentPackagePath);
-//   pkg.scripts = {
-//     ...(pkg.scripts || {}),
-//     readmelinks: 'readmelinks',
-//   };
-//   await writeJson(parentPackagePath, pkg);
-// }
+function addScriptToParentPackage(
+  parentPackageJson: Record<string, any>,
+): Record<string, any> {
+  return {
+    ...(parentPackageJson.scripts || {}),
+    readmelinks: 'readmelinks',
+  };
+}
 
 const DEFAULT_SETTINGS: Record<string, string> = {
   srcRoot: 'src',
@@ -191,6 +191,7 @@ function generateDefaultConfigInPackageJson(
 ): Record<string, any> | null {
   if (!parentPackageJson.readmelinks) {
     parentPackageJson.readmelinks = DEFAULT_SETTINGS;
+    parentPackageJson.scripts = addScriptToParentPackage(parentPackageJson);
     return parentPackageJson;
   } else {
     return null;

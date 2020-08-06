@@ -32,22 +32,18 @@ or
 ```
 yarn add readmelinks -D
 ```
-#### Run
+#### First run
 ```
 yarn readmelinks
 ```
 
-or add a line in scripts in `package.json`
+or
+
 ```
-"scripts": {
-  ...
-  "readmelinks": "readmelinks"
-}
-```
-and run
-```
-npm run readmelinks
+node_modules/.bin/readmelinks
 ```     
+
+Check generated configuration in the `package.json`
 
 ## Overview
 A simple tool which does two things
@@ -60,14 +56,27 @@ A simple tool which does two things
 Although it is written in `typescript` and tested with Jest, in the end you are using a pure `Javascript` tool without any 3-rd party dependencies and thus unexpected surprises.
 
 ## Configuration
-First run of `npx readmelinks` inserts default configuration into `package.json`.
+First run of `node_modules/.bin/readmelinks` inserts default configuration and script into `package.json`.
 
 ```
+// package.json
 {
-  "srcRoot": "src",
-  "commentMark": "readmelinks-generator",
-  "regexp": "*.md"
+  ...
+  "scripts": {
+    ...
+    "readmelinks": "readmelinks"
+  },
+  ...    
+  "readmelinks": {
+    "srcRoot": "src",
+    "commentMark": "readmelinks-generator",
+    "regexp": "*.md"
+  }
 }
+```
+Then you can run the tool with a short command
+```
+npm run readmelinks
 ```
 
 #### `srcRoot`
