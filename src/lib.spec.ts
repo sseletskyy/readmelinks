@@ -27,20 +27,43 @@ describe('ReadmeLinkGenerator', () => {
     const root = '/Users/cw2930/projects/cw-buyer';
     const srcRoot = '/Users/cw2930/projects/cw-buyer/app';
     let subject: string[];
-    beforeAll(() => {
-      subject = generateLinks(root, srcRoot, files);
+    describe('when showFileName is false', () => {
+      beforeAll(() => {
+        subject = generateLinks(root, srcRoot, files, false);
+      });
+      it('should return relative folder path as the caption of the link', () => {
+        expect(subject[0]).toContain('[assets/client/components/Pagination]');
+        expect(subject[1]).toContain('[assets/layout/components/Footer]');
+      });
+      it('should return relative path as the link to the file', () => {
+        expect(subject[0]).toContain(
+          '(app/assets/client/components/Pagination/README.md)',
+        );
+        expect(subject[1]).toContain(
+          '(app/assets/layout/components/Footer/README.md)',
+        );
+      });
     });
-    it('should return relative folder path as the caption of the link', () => {
-      expect(subject[0]).toContain('[assets/client/components/Pagination]');
-      expect(subject[1]).toContain('[assets/layout/components/Footer]');
-    });
-    it('should return relative path as the link to the file', () => {
-      expect(subject[0]).toContain(
-        '(app/assets/client/components/Pagination/README.md)',
-      );
-      expect(subject[1]).toContain(
-        '(app/assets/layout/components/Footer/README.md)',
-      );
+    describe('when showFileName is true', () => {
+      beforeAll(() => {
+        subject = generateLinks(root, srcRoot, files, true);
+      });
+      it('should return relative folder path + fileName as the caption of the link', () => {
+        expect(subject[0]).toContain(
+          '[assets/client/components/Pagination/README.md]',
+        );
+        expect(subject[1]).toContain(
+          '[assets/layout/components/Footer/README.md]',
+        );
+      });
+      it('should return relative path as the link to the file', () => {
+        expect(subject[0]).toContain(
+          '(app/assets/client/components/Pagination/README.md)',
+        );
+        expect(subject[1]).toContain(
+          '(app/assets/layout/components/Footer/README.md)',
+        );
+      });
     });
   });
   describe('applyFormat', () => {
@@ -163,7 +186,7 @@ some other content`;
     it('should return a list of paths of found files', () => {
       const root = path.join(__dirname, '..');
       const dir = path.join(root, 'test-files');
-      const actual = getFiles(dir);
+      const actual = getFiles(dir, new RegExp('\\.md$'));
       const expected = [
         path.join(dir, 'README.md'),
         path.join(dir, 'dev.md'),
@@ -227,6 +250,8 @@ some other content`;
     const srcRoot = 'src';
     const readMePath = path.join(root, 'test-readme.md');
     const commentMark = 'test-mark';
+    const regexp = '\\.md$';
+    const showFileName = false;
     beforeAll(() => {
       // create file
       fs.writeFileSync(readMePath, '');
@@ -240,6 +265,8 @@ some other content`;
         srcRoot,
         readMePath,
         commentMark,
+        regexp,
+        showFileName,
       };
       updateRootReadme(config);
       const actual = fs.readFileSync(readMePath, 'utf-8');

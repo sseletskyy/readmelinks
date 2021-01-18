@@ -1,5 +1,9 @@
+"use strict";
 var aPath = require('path');
 var main = require('./lib');
+// const dirName =
+//   `/Users/cw2930/projects/cw-buyer/node_modules/readmelinks/src` || __dirname;
+// console.log(`readmelinks :: __dirname = ${dirName}`);
 var parentRoot = aPath.join(__dirname, '..', '..', '..');
 var parentPackageJsonPath = aPath.join(parentRoot, 'package.json');
 var parentPackageJson = main.readJson(parentPackageJsonPath);
@@ -14,10 +18,19 @@ if (!!jsonWithDefaultConfigOrNothing) {
 else {
     configFromJson = parentPackageJson.readmelinks;
 }
-var config = {
-    root: parentRoot,
-    readMePath: aPath.join(parentRoot, 'README.md'),
-    commentMark: configFromJson.commentMark,
-    srcRoot: configFromJson.srcRoot,
+var updateRootReadme = function (packageJsonConfig) {
+    main.updateRootReadme({
+        root: parentRoot,
+        readMePath: aPath.join(parentRoot, 'README.md'),
+        commentMark: packageJsonConfig.commentMark,
+        srcRoot: packageJsonConfig.srcRoot,
+        regexp: packageJsonConfig.regexp,
+        showFileName: !!packageJsonConfig.showFileName,
+    });
 };
-main.updateRootReadme(config);
+if (Array.isArray(configFromJson)) {
+    configFromJson.forEach(function (config) { return updateRootReadme(config); });
+}
+else {
+    updateRootReadme(configFromJson);
+}

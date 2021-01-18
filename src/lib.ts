@@ -6,6 +6,8 @@ export interface Config {
   srcRoot: string;
   readMePath: string;
   commentMark: string;
+  regexp: string;
+  showFileName: boolean;
 }
 
 const defaultConfig: Partial<Config> = {
@@ -16,18 +18,19 @@ const defaultConfig: Partial<Config> = {
  * Searches recursively for all README.md files
  * returns an array of absolute paths of found files
  * @param {string} dir - search inside of this dir
+ * @param {string} regexp - a RegExp string to match the file search
  * @param {string[]} files - should not be provided, is used for recursive calls, an array which accumulates all found files
  * @returns {string[]}
  */
-function getFiles(dir: string, files: string[] = []): string[] {
+function getFiles(dir: string, regexp: RegExp, files: string[] = []): string[] {
   const nestedFiles = fs.readdirSync(dir);
   for (let i in nestedFiles) {
     let name = nestedFiles[i];
     let fullName = path.join(dir, name);
     if (fs.statSync(fullName).isDirectory()) {
-      getFiles(fullName, files);
+      getFiles(fullName, regexp, files);
     } else {
-      if (/\w+\.md$/.test(name)) {
+      if (regexp.test(name)) {
         files.push(fullName);
       }
     }
@@ -111,12 +114,13 @@ function generateLinks(
   root: string,
   srcRoot: string,
   files: string[],
+  showFileName: boolean,
 ): string[] {
   return files.map((file) => {
-    const dirs: string[] = file.substring(srcRoot.length + 1).split('/');
-    const dir: string = dirs.slice(0, -1).join('/');
     const url = file.substring(root.length + 1);
-    return `[${dir}](${url})`;
+    const dir = file.substring(srcRoot.length + 1);
+    const caption = showFileName ? dir : dir.split('/').slice(0, -1).join('/');
+    return `[${caption}](${url})`;
   });
 }
 
@@ -136,7 +140,7 @@ function applyFormat(links: string[], formatter: Formatter): string[] {
  * main function which updates root README.md file
  */
 function updateRootReadme(config: Config): void {
-  ['root', 'srcRoot', 'readMePath', 'commentMark'].forEach((key) => {
+  ['root', 'srcRoot', 'readMePath', 'commentMark', 'regexp'].forEach((key) => {
     if (key !== undefined && !config[key as keyof Config]) {
       throw new Error(`In package.json readmelinks.${key} is missing`);
     }
@@ -147,12 +151,17 @@ function updateRootReadme(config: Config): void {
   // console.log('Config in package.json:');
   // console.log(JSON.stringify(config, null, 2));
 
-  const files = getFiles(config.srcRoot);
+  const files = getFiles(config.srcRoot, new RegExp(config.regexp));
   console.log('Found files');
   console.log(JSON.stringify(files, null, 2));
 
   const formatter: Formatter = (x) => `* ${x}`;
-  const links = generateLinks(config.root, config.srcRoot, files);
+  const links = generateLinks(
+    config.root,
+    config.srcRoot,
+    files,
+    config.showFileName,
+  );
   const formattedLinks = applyFormat(links, formatter);
 
   const fileContent = readRootReadme(config.readMePath);
