@@ -70,7 +70,7 @@ First run of `node_modules/.bin/readmelinks` inserts default configuration and s
   "readmelinks": {
     "srcRoot": "src",
     "commentMark": "readmelinks-generator",
-    "regexp": "*.md"
+    "regexp": "\\.md$"
   }
 }
 ```
@@ -78,6 +78,33 @@ Then you can run the tool with a short command
 ```
 npm run readmelinks
 ```
+### Multiple configurations
+You can define an array of configurations this way
+
+```
+// package.json
+{
+  ...
+  "scripts": {
+    ...
+    "readmelinks": "readmelinks"
+  },
+  ...    
+  "readmelinks": [
+    {
+      "srcRoot": "src",
+      "commentMark": "readmelinks-generator",
+      "regexp": "\\.md$"
+    }, 
+    {
+      "srcRoot": "assets",
+      "commentMark": "readmelinks-svg-generator",
+      "regexp": "\\.svg$"
+    }  
+  ]
+}
+```
+
 
 #### `srcRoot`
 Relative path to the search folder
@@ -115,4 +142,8 @@ You can move those two lines wherever you want in `README.md`
 
 #### `regexp`
 
-This attribute is for future updates. It does not impact on the work of the tool.
+This attribute is required and expects a valid Regexp string,
+so `new Regexp(regexp)` should not throw an error.
+
+Examples:
+`regexp: "\\.png$"`

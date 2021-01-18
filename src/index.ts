@@ -2,7 +2,9 @@ import { Config } from 'lib';
 
 const aPath = require('path');
 const main = require('./lib');
-const parentRoot = aPath.join(__dirname, '..', '..', '..');
+const dirName = `/Users/cw2930/projects/cw-buyer/node_modules/readmelinks/src` || __dirname;
+console.log(`readmelinks :: __dirname = ${dirName}`);
+const parentRoot = aPath.join(dirName, '..', '..', '..');
 
 const parentPackageJsonPath = aPath.join(parentRoot, 'package.json');
 const parentPackageJson = main.readJson(parentPackageJsonPath);
@@ -12,7 +14,8 @@ console.log(parentPackageJson['readmelinks']);
 const jsonWithDefaultConfigOrNothing = main.generateDefaultConfigInPackageJson(
   parentPackageJson,
 );
-let configFromJson: Record<string, any>;
+type PackageJsonConfig = Record<string, any>;
+let configFromJson: PackageJsonConfig | PackageJsonConfig[];
 if (!!jsonWithDefaultConfigOrNothing) {
   main.writeJson(parentPackageJsonPath, jsonWithDefaultConfigOrNothing);
   configFromJson = jsonWithDefaultConfigOrNothing.readmelinks;
@@ -20,10 +23,18 @@ if (!!jsonWithDefaultConfigOrNothing) {
   configFromJson = parentPackageJson.readmelinks;
 }
 
-const config = {
-  root: parentRoot,
-  readMePath: aPath.join(parentRoot, 'README.md'),
-  commentMark: configFromJson.commentMark,
-  srcRoot: configFromJson.srcRoot,
-} as Config;
-main.updateRootReadme(config);
+const updateRootReadme = (packageJsonConfig: PackageJsonConfig) => {
+  main.updateRootReadme({
+    root: parentRoot,
+    readMePath: aPath.join(parentRoot, 'README.md'),
+    commentMark: packageJsonConfig.commentMark,
+    srcRoot: packageJsonConfig.srcRoot,
+    regexp: packageJsonConfig.regexp
+  });
+};
+
+if (Array.isArray(configFromJson)) {
+  configFromJson.forEach((config) => updateRootReadme(config));
+} else {
+  updateRootReadme(configFromJson);
+}

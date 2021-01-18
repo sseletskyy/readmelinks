@@ -14,10 +14,18 @@ if (!!jsonWithDefaultConfigOrNothing) {
 else {
     configFromJson = parentPackageJson.readmelinks;
 }
-var config = {
-    root: parentRoot,
-    readMePath: aPath.join(parentRoot, 'README.md'),
-    commentMark: configFromJson.commentMark,
-    srcRoot: configFromJson.srcRoot,
+var updateRootReadme = function (packageJsonConfig) {
+    main.updateRootReadme({
+        root: parentRoot,
+        readMePath: aPath.join(parentRoot, 'README.md'),
+        commentMark: packageJsonConfig.commentMark,
+        srcRoot: packageJsonConfig.srcRoot,
+        regexp: packageJsonConfig.regexp
+    });
 };
-main.updateRootReadme(config);
+if (Array.isArray(configFromJson)) {
+    configFromJson.forEach(function (config) { return updateRootReadme(config); });
+}
+else {
+    updateRootReadme(configFromJson);
+}

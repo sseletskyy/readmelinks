@@ -163,7 +163,7 @@ some other content`;
     it('should return a list of paths of found files', () => {
       const root = path.join(__dirname, '..');
       const dir = path.join(root, 'test-files');
-      const actual = getFiles(dir);
+      const actual = getFiles(dir, new RegExp('\\.md$'));
       const expected = [
         path.join(dir, 'README.md'),
         path.join(dir, 'dev.md'),
@@ -227,6 +227,7 @@ some other content`;
     const srcRoot = 'src';
     const readMePath = path.join(root, 'test-readme.md');
     const commentMark = 'test-mark';
+    const regexp = '\\.md$';
     beforeAll(() => {
       // create file
       fs.writeFileSync(readMePath, '');
@@ -240,6 +241,7 @@ some other content`;
         srcRoot,
         readMePath,
         commentMark,
+        regexp
       };
       updateRootReadme(config);
       const actual = fs.readFileSync(readMePath, 'utf-8');

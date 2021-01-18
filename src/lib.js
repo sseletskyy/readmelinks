@@ -25,20 +25,21 @@ var defaultConfig = {
  * Searches recursively for all README.md files
  * returns an array of absolute paths of found files
  * @param {string} dir - search inside of this dir
+ * @param {string} regexp - a RegExp string to match the file search
  * @param {string[]} files - should not be provided, is used for recursive calls, an array which accumulates all found files
  * @returns {string[]}
  */
-function getFiles(dir, files) {
+function getFiles(dir, regexp, files) {
     if (files === void 0) { files = []; }
     var nestedFiles = fs.readdirSync(dir);
     for (var i in nestedFiles) {
         var name_1 = nestedFiles[i];
         var fullName = path.join(dir, name_1);
         if (fs.statSync(fullName).isDirectory()) {
-            getFiles(fullName, files);
+            getFiles(fullName, regexp, files);
         }
         else {
-            if (/\w+\.md$/.test(name_1)) {
+            if (regexp.test(name_1)) {
                 files.push(fullName);
             }
         }
@@ -128,7 +129,7 @@ function applyFormat(links, formatter) {
  * main function which updates root README.md file
  */
 function updateRootReadme(config) {
-    ['root', 'srcRoot', 'readMePath', 'commentMark'].forEach(function (key) {
+    ['root', 'srcRoot', 'readMePath', 'commentMark', 'regexp'].forEach(function (key) {
         if (key !== undefined && !config[key]) {
             throw new Error("In package.json readmelinks." + key + " is missing");
         }
@@ -136,7 +137,7 @@ function updateRootReadme(config) {
     config.srcRoot = path.join(config.root, config.srcRoot);
     // console.log('Config in package.json:');
     // console.log(JSON.stringify(config, null, 2));
-    var files = getFiles(config.srcRoot);
+    var files = getFiles(config.srcRoot, new RegExp(config.regexp));
     console.log('Found files');
     console.log(JSON.stringify(files, null, 2));
     var formatter = function (x) { return "* " + x; };
