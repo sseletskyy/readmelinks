@@ -7,6 +7,7 @@ export interface Config {
   readMePath: string;
   commentMark: string;
   regexp: string;
+  showFileName: boolean;
 }
 
 const defaultConfig: Partial<Config> = {
@@ -21,7 +22,7 @@ const defaultConfig: Partial<Config> = {
  * @param {string[]} files - should not be provided, is used for recursive calls, an array which accumulates all found files
  * @returns {string[]}
  */
-function getFiles(dir: string, regexp:RegExp, files: string[] = []): string[] {
+function getFiles(dir: string, regexp: RegExp, files: string[] = []): string[] {
   const nestedFiles = fs.readdirSync(dir);
   for (let i in nestedFiles) {
     let name = nestedFiles[i];
@@ -113,12 +114,13 @@ function generateLinks(
   root: string,
   srcRoot: string,
   files: string[],
+  showFileName: boolean,
 ): string[] {
   return files.map((file) => {
-    const dirs: string[] = file.substring(srcRoot.length + 1).split('/');
-    const dir: string = dirs.slice(0, -1).join('/');
     const url = file.substring(root.length + 1);
-    return `[${dir}](${url})`;
+    const dir = file.substring(srcRoot.length + 1);
+    const caption = showFileName ? dir : dir.split('/').slice(0, -1).join('/');
+    return `[${caption}](${url})`;
   });
 }
 
@@ -154,7 +156,12 @@ function updateRootReadme(config: Config): void {
   console.log(JSON.stringify(files, null, 2));
 
   const formatter: Formatter = (x) => `* ${x}`;
-  const links = generateLinks(config.root, config.srcRoot, files);
+  const links = generateLinks(
+    config.root,
+    config.srcRoot,
+    files,
+    config.showFileName,
+  );
   const formattedLinks = applyFormat(links, formatter);
 
   const fileContent = readRootReadme(config.readMePath);

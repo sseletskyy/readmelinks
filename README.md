@@ -105,6 +105,7 @@ You can define an array of configurations this way
 }
 ```
 
+### Configuration params
 
 #### `srcRoot`
 Relative path to the search folder
@@ -145,5 +146,23 @@ You can move those two lines wherever you want in `README.md`
 This attribute is required and expects a valid Regexp string,
 so `new Regexp(regexp)` should not throw an error.
 
-Examples:
+#### Examples:
 `regexp: "\\.png$"`
+
+#### `showFileName`
+
+Optional parameter with boolean type.
+If set to `true` then the link name will contain the name of the file
+
+#### Examples
+```
+showFileName: false
+
+* [components/Pagination/docs](docs/Pagination.md)
+```
+
+```
+showFileName: true
+
+* [components/Pagination/docs/Pagination.md](docs/Pagination.md)
+```

@@ -108,12 +108,12 @@ function writeRootReadme(readMePath, data) {
  * @param {string[]} files - list of absolute paths
  * @returns {string[]} links - list of links in the format '[title](relative url)'
  */
-function generateLinks(root, srcRoot, files) {
+function generateLinks(root, srcRoot, files, showFileName) {
     return files.map(function (file) {
-        var dirs = file.substring(srcRoot.length + 1).split('/');
-        var dir = dirs.slice(0, -1).join('/');
         var url = file.substring(root.length + 1);
-        return "[" + dir + "](" + url + ")";
+        var dir = file.substring(srcRoot.length + 1);
+        var caption = showFileName ? dir : dir.split('/').slice(0, -1).join('/');
+        return "[" + caption + "](" + url + ")";
     });
 }
 /**
@@ -141,7 +141,7 @@ function updateRootReadme(config) {
     console.log('Found files');
     console.log(JSON.stringify(files, null, 2));
     var formatter = function (x) { return "* " + x; };
-    var links = generateLinks(config.root, config.srcRoot, files);
+    var links = generateLinks(config.root, config.srcRoot, files, config.showFileName);
     var formattedLinks = applyFormat(links, formatter);
     var fileContent = readRootReadme(config.readMePath);
     var updatedFileContent = replaceContent(config.commentMark, fileContent, formattedLinks);

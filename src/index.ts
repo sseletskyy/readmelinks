@@ -1,10 +1,9 @@
-import { Config } from 'lib';
-
 const aPath = require('path');
 const main = require('./lib');
-const dirName = `/Users/cw2930/projects/cw-buyer/node_modules/readmelinks/src` || __dirname;
-console.log(`readmelinks :: __dirname = ${dirName}`);
-const parentRoot = aPath.join(dirName, '..', '..', '..');
+// const dirName =
+//   `/Users/cw2930/projects/cw-buyer/node_modules/readmelinks/src` || __dirname;
+// console.log(`readmelinks :: __dirname = ${dirName}`);
+const parentRoot = aPath.join(__dirname, '..', '..', '..');
 
 const parentPackageJsonPath = aPath.join(parentRoot, 'package.json');
 const parentPackageJson = main.readJson(parentPackageJsonPath);
@@ -29,7 +28,8 @@ const updateRootReadme = (packageJsonConfig: PackageJsonConfig) => {
     readMePath: aPath.join(parentRoot, 'README.md'),
     commentMark: packageJsonConfig.commentMark,
     srcRoot: packageJsonConfig.srcRoot,
-    regexp: packageJsonConfig.regexp
+    regexp: packageJsonConfig.regexp,
+    showFileName: !!packageJsonConfig.showFileName,
   });
 };
 
