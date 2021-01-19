@@ -230,7 +230,7 @@ some other content`;
       );
       const testPackageJson = readJson(testPackageJsonPath);
       const actual = generateDefaultConfigInPackageJson(testPackageJson);
-      const expectedConfig = DEFAULT_SETTINGS;
+      const expectedConfig = [DEFAULT_SETTINGS];
       const expectedScripts = {
         readmelinks: 'readmelinks',
       };

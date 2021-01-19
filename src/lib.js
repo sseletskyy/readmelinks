@@ -159,11 +159,12 @@ function addScriptToParentPackage(parentPackageJson) {
 var DEFAULT_SETTINGS = {
     srcRoot: 'src',
     commentMark: 'readmelinks-generator',
-    regexp: '*.md',
+    showFileName: false,
+    regexp: '\\.md$',
 };
 function generateDefaultConfigInPackageJson(parentPackageJson) {
     if (!parentPackageJson.readmelinks) {
-        parentPackageJson.readmelinks = DEFAULT_SETTINGS;
+        parentPackageJson.readmelinks = [DEFAULT_SETTINGS];
         parentPackageJson.scripts = addScriptToParentPackage(parentPackageJson);
         return parentPackageJson;
     }
